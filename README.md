@@ -191,7 +191,7 @@ Repeat the above steps for the following services:
 - `stock-check-service`
 - `message-service`
 
-### Verify the application is up and running
+### Step 4: Verify the application is up and running
 You can now test to make sure everything is working with calls through Postman as shown
 [under this heading](#testing-from-postman).
 
