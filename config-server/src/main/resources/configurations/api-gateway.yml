@@ -1,0 +1,71 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/book
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order
+
+        - id: discovery-server
+          uri: http://eureka:password@${app.eureka-server}:8761
+          predicates:
+            - Path=/eureka/web
+          filters:
+            - SetPath=/
+
+        - id: discovery-server-static
+          uri: http://eureka:password@${app.eureka-server}:8761
+          predicates:
+            - Path=/eureka/**
+
+        - id: order-service-actuator
+          uri: lb://order-service
+          predicates:
+            - Path=/order-service/actuator/**
+          filters:
+            - StripPrefix=1
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+app:
+  eureka-server: localhost
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0
+
+  # Prometheus
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+
+#spring:
+#  application:
+#    name: api-gateway
+#  config:
+#    import: optional:configserver:http://localhost:8888

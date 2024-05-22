@@ -1,0 +1,6 @@
+eureka:
+  client:
+    enabled: false
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    leaseExpirationDurationInSeconds: 30

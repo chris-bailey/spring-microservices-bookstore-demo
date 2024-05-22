@@ -1,0 +1,29 @@
+global:
+  scrape_interval:     10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'book_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['book-service:8080']
+        labels:
+          application: 'Book Service Application'
+  - job_name: 'order_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['order-service:8080']
+        labels:
+          application: 'Order Service Application'
+  - job_name: 'stock_check_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['stock-check-service:8080']
+        labels:
+          application: 'Stock Check Service Application'
+  - job_name: 'message_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['message-service:8080']
+        labels:
+          application: 'Message Service Application'

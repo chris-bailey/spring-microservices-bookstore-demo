@@ -1,0 +1,19 @@
+
+app:
+  eureka-server: discovery-server
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@discovery-server:8761/eureka
+
+management:
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
+
+#spring:
+#  application:
+#    name: api-gateway
+#  config:
+#    import: optional:configserver:http://config-server:8888
