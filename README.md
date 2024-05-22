@@ -9,7 +9,7 @@ within a microservices architecture to build scalable and maintainable systems.
 ## Prerequisites
 Before running the project, ensure you have the following installed:
 
-- [Docker Desktop](https://www.docker.com/books/docker-desktop) (which includes Docker Compose)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) (which includes Docker Compose)
 - [Java Development Kit (JDK) 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or later
 - [Maven](https://maven.apache.org/install.html)
 
