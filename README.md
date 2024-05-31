@@ -126,7 +126,7 @@ Deploy the application components in phases to ensure all services are initializ
 Once all services are deployed, verify the application's functionality via API gateway calls.
 Detailed instructions and endpoints are available [under this heading](#testing-from-postman).
 
-## Running the Application Services for local Development & Testing
+## Running the Application Services for Local Development & Testing
 Running the services locally within the IDE environment allows for simple debugging, and allows for local development
 and testing.
 
