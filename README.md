@@ -63,6 +63,7 @@ or anything else that can run in a Docker container.
 
 - **Micrometer Tracing and Brave**: For instrumenting your application and sending trace data to Zipkin.
 - **Zipkin**: For collecting and viewing trace data.
+- **Micrometer with Prometheus**: Micrometer collects metrics and exposes them via Spring Boot Actuator for Prometheus. 
 - **Prometheus**: For monitoring and alerting.
 - **Grafana**: For visualizing metrics and logs.
 
