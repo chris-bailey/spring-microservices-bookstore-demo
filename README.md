@@ -88,7 +88,13 @@ This architecture includes the following components:
 To deploy and run the microservices using Docker, follow these steps:
 
 ### Prerequisites
-Ensure Docker Desktop is installed and running. Learn more about Docker Desktop and its setup [here](https://www.docker.com/products/docker-desktop).
+Ensure Docker Desktop is installed and running. You **must** have Docker Desktop running, or you will encounter errors 
+when you try to build the Docker images. If Docker Desktop is not running, you may see an error like this:
+
+```
+[ERROR] Failed to execute goal com.google.cloud.tools:jib-maven-plugin:3.2.1:dockerBuild (default) on project discovery-server: 'docker load' command failed with error: error during connect: this error may indicate that the docker daemon is not running...
+```
+Learn more about Docker Desktop and its setup [here](https://www.docker.com/products/docker-desktop).
 
 ### Building Docker Images
 We use Google JIB to build optimized Docker and OCI images for Java applications without a Dockerfile. 
@@ -196,7 +202,7 @@ Repeat the above steps for the following services:
 You can now test to make sure everything is working with calls through Postman as shown
 [under this heading](#testing-from-postman).
 
-If you require Prometheus and Grafana, their containers can be started from within Docker Desktop. 
+If you want to use Prometheus and Grafana, their containers can be started manually from within Docker Desktop. 
 
 ## Testing from Postman
 
