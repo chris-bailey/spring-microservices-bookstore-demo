@@ -10,7 +10,7 @@ spring:
         - id: book-service
           uri: lb://book-service
           predicates:
-            - Path=/api/book
+            - Path=/api/book/**
 
         - id: order-service
           uri: lb://order-service
@@ -63,9 +63,6 @@ logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
-
-#spring:
-#  application:
-#    name: api-gateway
-#  config:
-#    import: optional:configserver:http://localhost:8888
+cors:
+  allowed:
+    origins: http://localhost:3000

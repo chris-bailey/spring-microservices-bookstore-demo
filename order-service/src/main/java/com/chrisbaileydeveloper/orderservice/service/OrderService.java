@@ -16,7 +16,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -30,7 +32,7 @@ public class OrderService {
     private final ObservationRegistry observationRegistry;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public String placeOrder(OrderRequest orderRequest) {
+    public Map<String, String> placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
         order.setOrderNumber(UUID.randomUUID().toString());
 
@@ -55,14 +57,18 @@ public class OrderService {
             boolean allBooksInStock = stockCheckResponses.stream()
                     .allMatch(StockCheckResponse::isInStock);
 
+            Map<String, String> response = new HashMap<>();
             if (allBooksInStock) {
                 orderRepository.save(order);
                 // publish the Order Placed Event to Kafka
                 applicationEventPublisher.publishEvent(new OrderPlacedEvent(this, order.getOrderNumber()));
-                return "Order Placed";
+                response.put("status", "success");
+                response.put("message", "Order placed successfully!");
             } else {
-                throw new IllegalArgumentException("The book is not in stock. Please try again later.");
+                response.put("status", "error");
+                response.put("message", "The service is busy or the book is not in stock. Please try again later.");
             }
+            return response;
         });
 
     }

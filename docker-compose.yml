@@ -195,7 +195,7 @@ services:
     container_name: grafana
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3000"
     links:
       - prometheus:prometheus
     volumes:
@@ -203,5 +203,17 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=password
+    profiles:
+      - services
+
+  nextjs-frontend:
+    container_name: nextjs-frontend
+    image: microservices-bookstore/nextjs-frontend:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_GATEWAY=http://api-gateway:8080
+    depends_on:
+      - api-gateway
     profiles:
       - services

@@ -60,8 +60,8 @@ public class OrderServiceApplicationTests {
 	@Test
 	void shouldPlaceOrder() throws Exception {
 		OrderLineItemsDto orderLineItemsDto = new OrderLineItemsDto();
-		orderLineItemsDto.setSkuCode("item1");
-		orderLineItemsDto.setPrice(BigDecimal.valueOf(100));
+		orderLineItemsDto.setSkuCode("design_patterns_gof");
+		orderLineItemsDto.setPrice(BigDecimal.valueOf(29));
 		orderLineItemsDto.setQuantity(1);
 
 		OrderRequest orderRequest = new OrderRequest();

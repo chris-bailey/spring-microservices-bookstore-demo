@@ -56,6 +56,36 @@
 			"response": []
 		},
 		{
+			"name": "API Gateway - Delete a Book",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/book/665cbe8bbbfbf84d1d95833d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"book",
+						"665cbe8bbbfbf84d1d95833d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "API Gateway - Place Order (In Stock)",
 			"request": {
 				"method": "POST",
@@ -157,6 +187,36 @@
 					"path": [
 						"api",
 						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Local - Delete a Book",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/api/book/665cb65eb28d8f5f7d191548",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"api",
+						"book",
+						"665cb65eb28d8f5f7d191548"
 					]
 				}
 			},

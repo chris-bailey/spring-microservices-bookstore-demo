@@ -96,7 +96,16 @@ when you try to build the Docker images. If Docker Desktop is not running, you m
 ```
 Learn more about Docker Desktop and its setup [here](https://www.docker.com/products/docker-desktop).
 
-### Building Docker Images
+Additionally, ensure you are logged into Docker Hub within Docker Desktop. This can prevent credential-related errors during the build process. You might see warnings like the following if you are not logged in:
+
+```
+[WARNING] The credential helper (docker-credential-desktop) has nothing for server URL: registry-1.docker.io
+[WARNING] credentials not found in native keychain
+```
+
+You can log into Docker Hub by opening Docker Desktop, clicking on the Docker icon in your system tray, and selecting "Sign in / Create Docker ID."
+
+### Building Docker Images for the Services
 We use Google JIB to build optimized Docker and OCI images for Java applications without a Dockerfile. 
 JIB integrates directly into Maven and Gradle, improving build speeds and caching.
 
@@ -105,6 +114,15 @@ To build Docker images locally for all services, navigate to the top-level direc
 mvn clean package -DskipTests
 ```
 _Wait for the images to be created before deploying with Docker._
+
+Note that the tests can be run, but it will take longer to build the packages.
+
+#### Building Docker image for the Frontend Next.js Application
+To build the Docker image for the frontend Next.js application, run the following commands from the top-level directory:
+```sh
+docker build -t microservices-bookstore/nextjs-frontend:latest ./frontend
+```
+Run this command anytime you want to update the Docker image for the frontend application.
 
 ### Deploying the Application
 Deploy the application components in phases to ensure all services are initialized properly:
@@ -130,21 +148,31 @@ Deploy the application components in phases to ensure all services are initializ
    ```
 
 ### Verification
-Once all services are deployed, verify the application's functionality via API gateway calls.
-Detailed instructions and endpoints are available [under this heading](#testing-from-postman).
+Once all services are deployed, verify the application's functionality via the frontend application and API gateway calls.
 
-## Running the Application Services for Local Development & Testing
+#### Frontend Application
+Navigate to [http://localhost:3000](http://localhost:3000) to access the frontend application. The page provides the following functionality:
+- **List of Books:** View all available books.
+- **Add a New Book:** Add a new book by entering the name, description, and price.
+- **Delete a Book:** Remove a book from the list.
+- **Place an Order:** Select a book to place an order.
+- **Microservices Links:** Access various microservices through provided links.
+
+#### Testing from Postman
+Detailed instructions and endpoints for verifying functionality through API gateway calls are available [under this heading](#testing-from-postman).
+
+## Running the Application Services without Docker for Local Development & Testing
 Running the services locally within the IDE environment allows for simple debugging, and allows for local development
 and testing.
 
 ### Step 1: Start Docker Desktop
 
-Start **Docker Desktop** and ensure it is running.
+Start **Docker Desktop** and ensure it is running. Verify you are logged into Docker Hub.
 
 ### Step 2: Bring Up Infrastructure Containers
 
 From the top-level directory of your project, run the following command to start the necessary infrastructure 
-components such as databases, Zipkin, Zookeeper, and the Kafka broker:
+components such as the databases, Zipkin, Zookeeper, and the Kafka broker:
 
 ```sh
 docker-compose --profile infrastructure up -d
@@ -163,7 +191,7 @@ started from the Services tab as shown below:
 
 Each IDE provides an intuitive way to do something similar.
 
-### Step 3b: Starting the Services manually
+### Step 3b: Starting the Services Manually
 If you prefer to start the services manually, then open a new terminal window for each service.
 
 #### Discovery Server
@@ -198,9 +226,20 @@ Repeat the above steps for the following services:
 - `stock-check-service`
 - `message-service`
 
-### Step 4: Verify the application is up and running
-You can now test to make sure everything is working with calls through Postman as shown
-[under this heading](#testing-from-postman).
+### Step 4: Start the Next.js Frontend
+Navigate to the `frontend` directory, install dependencies if you haven't already, and start the development server.
+```sh
+# Navigate to the frontend directory
+cd ../frontend
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+Navigate to [http://localhost:3000](http://localhost:3000) to access the frontend application.
 
 If you want to use Prometheus and Grafana, their containers can be started manually from within Docker Desktop. 
 
@@ -318,6 +357,22 @@ services in Docker, then you can only use the API Gateway calls through port 808
 }
 ```
 
+#### Testing 'Out of Stock' Functionality
+
+- **Request Body:** Use the following JSON to test the 'Out of Stock' functionality:
+
+```json
+{
+  "orderLineItemsDtoList": [
+    {
+      "skuCode": "mythical_man_month",
+      "price": 39,
+      "quantity": 1
+    }
+  ]
+}
+```
+
 ## Accessing Services and Databases
 
 Below are the details for connecting to the various services and databases used in the Spring Microservices Bookstore
@@ -348,7 +403,7 @@ of the application.
 
 #### Setting up Grafana
 
-1. **Login to Grafana:** Go to `http://localhost:3000/login` and log in with username `admin` and password `password`.
+1. **Login to Grafana:** Go to `http://localhost:3001/login` and log in with username `admin` and password `password`.
 2. **Add Data Source:**
 - Under Data Sources, click on **Add your first data source**.
 - Select **Prometheus** from the list.

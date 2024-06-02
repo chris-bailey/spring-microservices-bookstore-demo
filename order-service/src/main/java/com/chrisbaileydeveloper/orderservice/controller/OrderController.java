@@ -8,8 +8,10 @@ import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -25,13 +27,27 @@ public class OrderController {
     @CircuitBreaker(name = "stock-check", fallbackMethod = "fallbackMethod")
     @TimeLimiter(name = "stock-check")
     @Retry(name = "stock-check")
-    public CompletableFuture<String> placeOrder(@RequestBody OrderRequest orderRequest) {
+    public CompletableFuture<ResponseEntity<Map<String, String>>> placeOrder(@RequestBody OrderRequest orderRequest) {
         log.info("Placing the Order");
-        return CompletableFuture.supplyAsync(() -> orderService.placeOrder(orderRequest));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Map<String, String> result = orderService.placeOrder(orderRequest);
+                HttpStatus status = "success".equals(result.get("status")) ? HttpStatus.CREATED : HttpStatus.INTERNAL_SERVER_ERROR;
+                return ResponseEntity.status(status).body(result);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                        "status", "error",
+                        "message", e.getMessage()
+                ));
+            }
+        });
     }
 
-    public CompletableFuture<String> fallbackMethod(OrderRequest orderRequest, RuntimeException runtimeException) {
+    public CompletableFuture<ResponseEntity<Map<String, String>>> fallbackMethod(OrderRequest orderRequest, RuntimeException runtimeException) {
         log.info("Unable to place Order - Fallback method being executed");
-        return CompletableFuture.supplyAsync(() -> "Order could not be created. Please try again later!");
+        return CompletableFuture.supplyAsync(() -> ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of(
+                "status", "error",
+                "message", "The order service is busy or the item is out of stock."
+        )));
     }
 }

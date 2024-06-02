@@ -28,4 +28,9 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(@PathVariable String id) {
+        bookService.deleteBook(id);
+    }
 }

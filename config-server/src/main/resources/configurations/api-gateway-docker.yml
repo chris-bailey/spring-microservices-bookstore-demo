@@ -11,9 +11,3 @@ management:
   zipkin:
     tracing:
       endpoint: http://zipkin:9411/api/v2/spans
-
-#spring:
-#  application:
-#    name: api-gateway
-#  config:
-#    import: optional:configserver:http://config-server:8888
