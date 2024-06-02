@@ -230,7 +230,7 @@ Repeat the above steps for the following services:
 Navigate to the `frontend` directory, install dependencies if you haven't already, and start the development server.
 ```sh
 # Navigate to the frontend directory
-cd ../frontend
+cd frontend
 
 # Install dependencies
 npm install
