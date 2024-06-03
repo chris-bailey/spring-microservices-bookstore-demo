@@ -117,12 +117,12 @@ _Wait for the images to be created before deploying with Docker._
 
 Note that the tests can be run, but it will take longer to build the packages.
 
-#### Building Docker image for the Frontend Next.js Application
-To build the Docker image for the frontend Next.js application, run the following commands from the top-level directory:
+#### Building Docker image for the Front-end Next.js Application
+To build the Docker image for the front-end Next.js application, run the following commands from the top-level directory:
 ```sh
 docker build -t microservices-bookstore/nextjs-frontend:latest ./frontend
 ```
-Run this command anytime you want to update the Docker image for the frontend application.
+Run this command anytime you want to update the Docker image for the front-end application.
 
 ### Deploying the Application
 Deploy the application components in phases to ensure all services are initialized properly:
@@ -148,10 +148,10 @@ Deploy the application components in phases to ensure all services are initializ
    ```
 
 ### Verification
-Once all services are deployed, verify the application's functionality via the frontend application and API gateway calls.
+Once all services are deployed, verify the application's functionality via the front-end application and API gateway calls.
 
-#### Frontend Application
-Navigate to [http://localhost:3000](http://localhost:3000) to access the frontend application. The page provides the following functionality:
+#### Front-end Application
+Navigate to [http://localhost:3000](http://localhost:3000) to access the front-end application. The page provides the following functionality:
 - **List of Books:** View all available books.
 - **Add a New Book:** Add a new book by entering the name, description, and price.
 - **Delete a Book:** Remove a book from the list.
@@ -226,7 +226,7 @@ Repeat the above steps for the following services:
 - `stock-check-service`
 - `message-service`
 
-### Step 4: Start the Next.js Frontend
+### Step 4: Start the Next.js Front-end
 Navigate to the `frontend` directory, install dependencies if you haven't already, and start the development server.
 ```sh
 # Navigate to the frontend directory
@@ -239,7 +239,7 @@ npm install
 npm run dev
 ```
 
-Navigate to [http://localhost:3000](http://localhost:3000) to access the frontend application.
+Navigate to [http://localhost:3000](http://localhost:3000) to access the front-end application.
 
 If you want to use Prometheus and Grafana, their containers can be started manually from within Docker Desktop. 
 
