@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://micro-bookstore.chrisbaileydeveloper.com'),  // Update this to your actual domain
+  metadataBase: new URL('https://micro-bookstore.chrisbaileydeveloper.com'),
   title: {
     default: 'Spring Microservices Bookstore Demo',
     template: '%s | Spring Microservices Bookstore Demo',
