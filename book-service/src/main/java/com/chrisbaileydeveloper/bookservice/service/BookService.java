@@ -34,9 +34,15 @@ public class BookService {
         return books.stream().map(this::mapToBookResponse).toList();
     }
 
-    public void deleteBook(String id) {
-        bookRepository.deleteById(id);
-        log.info("Book has been deleted with id: {}", id);
+    public boolean deleteBook(String id) {
+        if (bookRepository.existsById(id)) {
+            bookRepository.deleteById(id);
+            log.info("Book has been deleted with id: {}", id);
+            return true;
+        } else {
+            log.info("No book found with id: {}", id);
+            return false;
+        }
     }
 
     private BookResponse mapToBookResponse(Book book) {

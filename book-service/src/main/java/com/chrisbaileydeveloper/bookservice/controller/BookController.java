@@ -5,6 +5,7 @@ import com.chrisbaileydeveloper.bookservice.dto.BookResponse;
 import com.chrisbaileydeveloper.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +30,8 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteBook(@PathVariable String id) {
-        bookService.deleteBook(id);
+    public ResponseEntity<Void> deleteBook(@PathVariable String id) {
+        boolean isDeleted = bookService.deleteBook(id);
+        return isDeleted ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
     }
 }
