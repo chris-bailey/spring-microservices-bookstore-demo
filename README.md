@@ -67,6 +67,12 @@ or anything else that can run in a Docker container.
 - **Prometheus**: For monitoring and alerting.
 - **Grafana**: For visualizing metrics and logs.
 
+### Front-end
+
+- **Next.js**: For server-side rendering, static site generation, and the recommended framework when using React.js.
+- **React.js**: Popular JavaScript framework for building interactive user interfaces.
+- **Tailwind CSS**: Utility-first CSS framework to style the application.
+
 ## Application Architecture
 
 The following diagram illustrates the architecture of the Spring Microservices Bookstore application:
