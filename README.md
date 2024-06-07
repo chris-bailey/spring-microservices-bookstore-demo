@@ -77,7 +77,7 @@ or anything else that can run in a Docker container.
 
 The following diagram illustrates the architecture of the Spring Microservices Bookstore application:
 
-![Spring Microservices Bookstore Architecture](assets/spring-boot-microservices-diagram.PNG)
+![Spring Microservices Bookstore Architecture](assets/spring-boot-microservices-diagram.png)
 
 This architecture includes the following components:
 
