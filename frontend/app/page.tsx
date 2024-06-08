@@ -17,6 +17,8 @@ interface OrderBook {
   inStock: boolean;
 }
 
+const API_BASE_URL = 'http://localhost:8080/api';
+
 const availableBooks: OrderBook[] = [
   { skuCode: 'design_patterns_gof', name: 'Design Patterns', price: 29, inStock: true },
   { skuCode: 'mythical_man_month', name: 'Mythical Man Month', price: 39, inStock: false },
@@ -49,7 +51,7 @@ export default function Home() {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/book`);
+      const response = await axios.get(`${API_BASE_URL}/book`);
       setBooks(response.data);
     } catch (error) {
       console.error('Error fetching books:', error);
@@ -70,7 +72,7 @@ export default function Home() {
     }
 
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/book`, newBook, {
+      await axios.post(`${API_BASE_URL}/book`, newBook, {
         headers: { 'Content-Type': 'application/json' }
       });
       await fetchBooks();
@@ -83,7 +85,7 @@ export default function Home() {
 
   const deleteBook = async (id: string) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_BASE_URL}/book/${id}`, {
+      await axios.delete(`${API_BASE_URL}/book/${id}`, {
         headers: { 'Content-Type': 'application/json' }
       });
       await fetchBooks();
@@ -104,7 +106,7 @@ export default function Home() {
     };
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/order`, order, {
+      const response = await axios.post(`${API_BASE_URL}/order`, order, {
         headers: { 'Content-Type': 'application/json' }
       });
 

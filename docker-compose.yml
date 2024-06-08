@@ -211,8 +211,6 @@ services:
     image: microservices-bookstore/nextjs-frontend:latest
     ports:
       - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_GATEWAY=http://api-gateway:8080
     depends_on:
       - api-gateway
     profiles:
