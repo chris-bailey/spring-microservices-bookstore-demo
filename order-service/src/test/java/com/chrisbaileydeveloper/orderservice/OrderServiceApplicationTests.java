@@ -34,7 +34,8 @@ public class OrderServiceApplicationTests {
 	static PostgreSQLContainer<?> postgresDBContainer = new PostgreSQLContainer<>("postgres:latest")
 			.withDatabaseName("order_service")
 			.withUsername("admin")
-			.withPassword("password");
+			.withPassword("password")
+	    	.withInitScript("schema.sql");
 
 	@Autowired
 	private MockMvc mockMvc;
