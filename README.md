@@ -21,6 +21,7 @@ This project demonstrates a microservices architecture using the following techn
 
 - **Spring Boot 3**: For building the individual microservices.
 - **Spring Web**: For building RESTful web services.
+- **Spring Webflux (Reactor)**: For building non-blocking, reactive microservices.
 - **Spring Cloud Netflix Eureka**: For service discovery, including registering and discovering microservices.
 - **Spring Cloud Gateway**: For API gateway and routing.
 - **Spring Data JPA**: For data access and ORM.
@@ -83,6 +84,7 @@ This architecture includes the following components:
 
 - **API Gateway**: Acts as the entry point to the microservices architecture, routing requests to the appropriate services.
 - **Book Service**: Manages book data and interacts with a MongoDB database.
+- **Author Service**: Manages author profiles and interactions using a non-blocking, reactive approach with Spring Webflux.
 - **Order Service**: Handles purchase transactions and interacts with a PostgreSQL database.
 - **StockCheck Service**: Manages stock checking and interacts with a PostgreSQL database.
 - **Message Service**: Sends messages through interactions with Kafka.
@@ -124,7 +126,7 @@ _Wait for the images to be created before deploying with Docker._
 Note that the tests can be run, but it will take longer to build the packages.
 
 #### Building Docker image for the Front-end Next.js Application
-To build the Docker image for the front-end Next.js application, run the following commands from the top-level directory:
+To build the Docker image for the front-end Next.js application, run the following commands **from the top-level directory**:
 ```sh
 docker build -t microservices-bookstore/nextjs-frontend:latest ./frontend
 ```
@@ -140,27 +142,30 @@ Deploy the application components in phases to ensure all services are initializ
    ```
    Wait until all infrastructure components are fully operational before proceeding.
 
-2. **Configuration and Discovery Servers:**
-   Next, bring up the configuration and discovery servers:
+2. **Discovery and Configuration Servers:**
+   Next, bring up the discovery and external configuration servers:
    ```sh
-   docker-compose --profile config-discovery up -d
+   docker-compose --profile discovery-config up -d
    ```
    Ensure these servers are running smoothly to facilitate service registration and configuration management.
 
 3. **Application Services:**
-   Finally, deploy the remaining application services:
+   Finally, deploy the application services:
    ```sh
    docker-compose --profile services up -d
    ```
 
 ### Verification
-Once all services are deployed, verify the application's functionality via the front-end application and API gateway calls.
+Once all services are deployed, verify the application's functionality via the front-end application or API gateway calls.
 
 #### Front-end Application
 Navigate to [http://localhost:3000](http://localhost:3000) to access the front-end application. The page provides the following functionality:
 - **List of Books:** View all available books.
 - **Add a New Book:** Add a new book by entering the name, description, and price.
 - **Delete a Book:** Remove a book from the list.
+- **List of Authors:** View all available authors.
+- **Add a New Author:** Add a new author by entering the name and birthdate.
+- **Delete an Author:** Remove an author from the list.
 - **Place an Order:** Select a book to place an order.
 - **Microservices Links:** Access various microservices through provided links.
 
@@ -177,7 +182,7 @@ Start **Docker Desktop** and ensure it is running. Verify you are logged into Do
 
 ### Step 2: Bring Up Infrastructure Containers
 
-From the top-level directory of your project, run the following command to start the necessary infrastructure 
+**From the top-level directory** of your project, run the following command to start the necessary infrastructure 
 components such as the databases, Zipkin, Zookeeper, and the Kafka broker:
 
 ```sh
@@ -193,7 +198,7 @@ After the `config-server` is up and running, we can start the rest of the servic
 The simplest way to start each of the services is from within an IDE. For example, within IntelliJ each service can be
 started from the Services tab as shown below:
 
-![Services tab within IntelliJ](assets/intellij-services.PNG)
+![Services tab within IntelliJ](assets/intellij-services.png)
 
 Each IDE provides an intuitive way to do something similar.
 
@@ -227,6 +232,7 @@ mvn clean compile spring-boot:run
 
 Repeat the above steps for the following services:
 - `book-service`
+- `author-service`
 - `api-gateway`
 - `order-service`
 - `stock-check-service`
@@ -265,12 +271,13 @@ You can import the Postman configuration that is at the following location:
 
 If you prefer to enter the configuration manually, then continue to the next subheadings.
 
-### View all Books via API Gateway
+### API Gateway Endpoints
+#### View all Books
 
 - **Endpoint URL:** `http://localhost:8080/api/book`
 - **Method:** `GET`
 
-### Save a Book via API Gateway
+#### Save a Book
 
 - **Endpoint URL:** `http://localhost:8080/api/book`
 - **Method:** `POST`
@@ -285,7 +292,31 @@ If you prefer to enter the configuration manually, then continue to the next sub
 }
 ```
 
-### Place an Order via API Gateway
+#### Delete a Book
+- **Endpoint URL:** `http://localhost:8080/api/book/{id}`
+- **Method:** `DELETE`
+
+#### View All Authors
+- **Endpoint URL:** `http://localhost:8080/api/authors`
+- **Method:** `GET`
+
+#### Save an Author
+- **Endpoint URL:** `http://localhost:8080/api/authors`
+- **Method:** `POST`
+- **Headers:** `Content-Type: application/json`
+- **Request Body:**
+```json
+{
+  "name": "Andrew Hunt",
+  "birthDate": "1974-02-19"
+}
+```
+
+#### Delete an Author
+- **Endpoint URL:** `http://localhost:8080/api/authors/{id}`
+- **Method:** `DELETE`
+
+#### Place an Order
 
 - **Endpoint URL:** `http://localhost:8080/api/order`
 - **Method:** `POST`
@@ -321,63 +352,14 @@ If you prefer to enter the configuration manually, then continue to the next sub
 ```
 
 ### Additional Endpoints for Local Development
+If you would like to use Postman to make calls directly to the local services as opposed to through the API gateway then
+you can utilize the following ports. 
 
-When running the services locally on local ports, you can run a few additional calls through Postman. If you are running the
-services in Docker, then you can only use the API Gateway calls through port 8080.
+Simply modify the port that is being used in the Postman calls above.
 
-#### View All Books (Local Service)
-
-- **Endpoint URL:** `http://localhost:8081/api/book`
-- **Method:** `GET`
-
-#### Save a Book (Local Service)
-
-- **Endpoint URL:** `http://localhost:8081/api/book`
-- **Method:** `POST`
-- **Headers:** `Content-Type: application/json`
-- **Request Body:** Use the following JSON:
-
-```json
-{
-  "name": "The Mythical Man-Month: Essays on Software Engineering",
-  "description": "A classic book on software project management and the pitfalls of adding manpower to late projects.",
-  "price": 39
-}
-```
-
-#### Place an Order (Local Service)
-
-- **Endpoint URL:** `http://localhost:8082/api/order`
-- **Method:** `POST`
-- **Headers:** `Content-Type: application/json`
-- **Request Body:** Use the following JSON:
-
-```json
-{ "orderLineItemsDtoList": [
-  {
-    "skuCode": "design_patterns_gof",
-    "price": 29,
-    "quantity": 1
-  }
-]
-}
-```
-
-#### Testing 'Out of Stock' Functionality
-
-- **Request Body:** Use the following JSON to test the 'Out of Stock' functionality:
-
-```json
-{
-  "orderLineItemsDtoList": [
-    {
-      "skuCode": "mythical_man_month",
-      "price": 39,
-      "quantity": 1
-    }
-  ]
-}
-```
+- **Book Service:** Running on port `8081`
+- **Order Service:** Running on port `8082`
+- **Author Service:** Running on port `8085`
 
 ## Accessing Services and Databases
 
@@ -400,8 +382,7 @@ on the `Run Query` button to see the trace data.
 - **URL:** `http://localhost:9411/zipkin/`
 
 ### Prometheus and Grafana
-
-The application is setup so that you can access Prometheus and Grafana when running the dockerized version 
+The application is set up so that you can access Prometheus and Grafana when running the dockerized version 
 of the application.
 
 #### Prometheus
@@ -449,7 +430,7 @@ You can connect to the PostgreSQL databases using the following connection prope
 - **Postgres-Order Database:**
     - **Host:** `localhost`
     - **Port:** `5431`
-    - **Database Name:** `order-service`
+    - **Database Name:** `order_service`
     - **Username:** `admin`
     - **Password:** `password`
 
@@ -478,7 +459,7 @@ You can use [MongoDB Compass](https://www.mongodb.com/books/compass) to connect 
 
 ## Docker Containers - Cleaning Up
 To stop and remove all the containers, networks, and volumes created by Docker Compose for this project, 
-run the following command from the top-level directory of your project:
+run the following command **from the top-level directory** of your project:
 
 ```sh
 docker-compose -p spring-microservices-bookstore-demo down

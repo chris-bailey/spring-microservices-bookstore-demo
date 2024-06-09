@@ -18,7 +18,7 @@ services:
     container_name: postgres-order
     image: postgres
     environment:
-      POSTGRES_DB: order-service
+      POSTGRES_DB: order_service
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
@@ -49,6 +49,24 @@ services:
     profiles:
       - infrastructure
 
+  postgres-author:
+    container_name: postgres-author
+    image: postgres
+    environment:
+      POSTGRES_DB: author_service
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - ./databases/postgres-author:/data/postgres
+    expose:
+      - "5433"
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    restart: always
+    profiles:
+      - infrastructure
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.0.1
@@ -97,7 +115,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     profiles:
-      - config-discovery
+      - discovery-config
 
   ## Config Server
   config-server:
@@ -111,7 +129,7 @@ services:
     depends_on:
       - discovery-server
     profiles:
-      - config-discovery
+      - discovery-config
 
   api-gateway:
     image: microservices-bookstore/api-gateway:latest
@@ -138,13 +156,23 @@ services:
     profiles:
       - services
 
-  ## Order-Service Docker Compose Config
+  ## Author Service Docker Compose Config
+  author-service:
+    container_name: author-service
+    image: microservices-bookstore/author-service:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - api-gateway
+    profiles:
+      - services
+
+  ## Order Service Docker Compose Config
   order-service:
     container_name: order-service
     image: microservices-bookstore/order-service:latest
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-order:5431/order-service
     depends_on:
       - api-gateway
     profiles:
@@ -156,7 +184,6 @@ services:
     image: microservices-bookstore/stock-check-service:latest
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-stock-check:5432/stock-check-service
     depends_on:
       - api-gateway
     profiles:
@@ -190,6 +217,7 @@ services:
     profiles:
       - services
 
+  ## Grafana
   grafana:
     image: grafana/grafana-oss:8.5.2
     container_name: grafana
@@ -206,6 +234,8 @@ services:
     profiles:
       - services
 
+
+  ## NextJS Frontend
   nextjs-frontend:
     container_name: nextjs-frontend
     image: microservices-bookstore/nextjs-frontend:latest

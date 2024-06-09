@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: author-service
+  config:
+    import: optional:configserver:http://localhost:8888
+
+

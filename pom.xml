@@ -23,6 +23,7 @@
         <module>stock-check-service</module>
         <module>message-service</module>
         <module>config-server</module>
+        <module>author-service</module>
     </modules>
 
     <properties>

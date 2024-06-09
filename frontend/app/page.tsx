@@ -10,6 +10,12 @@ interface Book {
   price: number;
 }
 
+interface Author {
+  id: string;
+  name: string;
+  birthDate: string;
+}
+
 interface OrderBook {
   skuCode: string;
   name: string;
@@ -32,6 +38,12 @@ export default function Home() {
     description: '',
     price: 0
   });
+  const [authors, setAuthors] = useState<Author[]>([]);
+  const [newAuthor, setNewAuthor] = useState<Author>({
+    id: '',
+    name: '',
+    birthDate: ''
+  });
   const [orderStatus, setOrderStatus] = useState('');
   const [selectedBook, setSelectedBook] = useState<OrderBook>(availableBooks[0]);
   const [validationError, setValidationError] = useState('');
@@ -40,6 +52,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchBooks();
+    fetchAuthors();
   }, []);
 
   useEffect(() => {
@@ -49,6 +62,12 @@ export default function Home() {
     }
   }, [orderStatus]);
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewBook({ ...newBook, [name]: value });
+    setValidationError(''); // Clear validation error on input change
+  };
+
   const fetchBooks = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/book`);
@@ -56,12 +75,6 @@ export default function Home() {
     } catch (error) {
       console.error('Error fetching books:', error);
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setNewBook({ ...newBook, [name]: value });
-    setValidationError(''); // Clear validation error on input change
   };
 
   const addBook = async () => {
@@ -91,6 +104,39 @@ export default function Home() {
       await fetchBooks();
     } catch (error) {
       console.error('Error deleting book:', error);
+    }
+  };
+
+  const fetchAuthors = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/authors`);
+      setAuthors(response.data);
+    } catch (error) {
+      console.error('Error fetching authors:', error);
+    }
+  };
+
+  const addAuthor = async () => {
+    if (!newAuthor.name || !newAuthor.birthDate) {
+      console.error('All fields are required.');
+      return;
+    }
+
+    try {
+      await axios.post(`${API_BASE_URL}/authors`, newAuthor);
+      await fetchAuthors();
+      setNewAuthor({ id: '', name: '', birthDate: '' });
+    } catch (error) {
+      console.error('Error adding author:', error);
+    }
+  };
+
+  const deleteAuthor = async (id: string) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/authors/${id}`);
+      await fetchAuthors();
+    } catch (error) {
+      console.error('Error deleting author:', error);
     }
   };
 
@@ -125,6 +171,7 @@ export default function Home() {
       <div className="container mx-auto p-4 bg-gray-100 min-h-screen relative">
         <h1 className="text-3xl font-bold mt-3 mb-10 text-center text-gray-800">Spring Microservices Bookstore Demo</h1>
 
+        {/* Books Section */}
         <section className="mb-12 p-6 bg-white shadow-lg rounded-md">
           <h2 className="text-2xl font-semibold mb-5 text-gray-700">List of Books</h2>
           <ul className="list-disc pl-5 space-y-4">
@@ -172,6 +219,51 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Authors Section */}
+        <section className="mb-12 p-6 bg-white shadow-lg rounded-md">
+          <h2 className="text-2xl font-semibold mb-5 text-gray-700">List of Authors</h2>
+          <ul className="list-disc pl-5 space-y-4">
+            {authors.map((author) => (
+                <li key={author.id} className="flex justify-between items-center">
+                  <div>
+                    <span className="font-medium text-gray-800">{author.name}</span> -
+                    {new Date(author.birthDate).toLocaleDateString("en-US", {
+                      year: 'numeric', month: 'long', day: 'numeric'
+                    })}
+                  </div>
+                  <button onClick={() => deleteAuthor(author.id)} className="text-red-500 hover:underline ml-4">Delete
+                  </button>
+                </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mb-12 p-6 bg-white shadow-lg rounded-md">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Add a New Author</h2>
+          <p className="mb-4 text-gray-600">Enter the details for the new author and click &apos;Add Author&apos; to save.</p>
+          <div className="flex flex-col space-y-4">
+            <input
+                className="border border-gray-300 p-2 rounded-md"
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={newAuthor.name}
+                onChange={(e) => setNewAuthor({...newAuthor, name: e.target.value})}
+            />
+            <input
+                className="border border-gray-300 p-2 rounded-md"
+                type="date"
+                name="birthDate"
+                placeholder="Birth Date"
+                value={newAuthor.birthDate}
+                onChange={(e) => setNewAuthor({...newAuthor, birthDate: e.target.value})}
+            />
+            <button className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600" onClick={addAuthor}>Add Author
+            </button>
+          </div>
+        </section>
+
+        {/* Orders Section */}
         <section ref={orderSectionRef} className="mb-12 p-6 bg-white shadow-lg rounded-md">
           <h2 className="text-2xl font-semibold mb-4 text-gray-700">Place an Order</h2>
           <p className="mb-4 text-gray-600">Note that Design Patterns is in stock so the order will be placed successfully; however Mythical Man Month is not in stock.</p>

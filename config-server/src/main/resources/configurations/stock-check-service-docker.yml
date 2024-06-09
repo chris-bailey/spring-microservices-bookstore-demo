@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://postgres:5432/stock-check-service
+    url: jdbc:postgresql://postgres-stock-check:5432/stock-check-service
     driver-class-name: org.postgresql.Driver
     username: admin
     password: password

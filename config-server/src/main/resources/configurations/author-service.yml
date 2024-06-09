@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: author-service
+    
+  # PostgreSQL
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/author_service
+    username: admin
+    password: password
+
+server:
+  port: 8085
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+
+# Zipkin
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0
+
+  # Actuator Prometheus Endpoint
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

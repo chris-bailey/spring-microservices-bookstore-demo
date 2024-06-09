@@ -17,6 +17,11 @@ spring:
           predicates:
             - Path=/api/order
 
+        - id: author-service
+          uri: lb://author-service
+          predicates:
+            - Path=/api/authors/**
+
         - id: discovery-server
           uri: http://eureka:password@${app.eureka-server}:8761
           predicates:

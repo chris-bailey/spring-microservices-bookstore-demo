@@ -32,7 +32,7 @@ public class OrderServiceApplicationTests {
 
 	@Container
 	static PostgreSQLContainer<?> postgresDBContainer = new PostgreSQLContainer<>("postgres:latest")
-			.withDatabaseName("order-service")
+			.withDatabaseName("order_service")
 			.withUsername("admin")
 			.withPassword("password");
 

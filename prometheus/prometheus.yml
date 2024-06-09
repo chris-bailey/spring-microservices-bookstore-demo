@@ -9,6 +9,12 @@ scrape_configs:
       - targets: ['book-service:8080']
         labels:
           application: 'Book Service Application'
+  - job_name: 'author_service'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['author-service:8080']
+        labels:
+          application: 'Author Service Application'
   - job_name: 'order_service'
     metrics_path: '/actuator/prometheus'
     static_configs:
