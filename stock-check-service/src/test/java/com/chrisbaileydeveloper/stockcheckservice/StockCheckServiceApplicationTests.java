@@ -36,7 +36,8 @@ public class StockCheckServiceApplicationTests {
 	static PostgreSQLContainer<?> postgresDBContainer = new PostgreSQLContainer<>("postgres:latest")
 			.withDatabaseName("stock-check-service")
 			.withUsername("admin")
-			.withPassword("password");
+			.withPassword("password")
+			.withInitScript("schema.sql");
 
 	@Autowired
 	private MockMvc mockMvc;
