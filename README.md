@@ -169,7 +169,7 @@ Navigate to [http://localhost:3000](http://localhost:3000) to access the front-e
 - **Place an Order:** Select a book to place an order.
 - **Microservices Links:** Access various microservices through provided links.
 
-#### Testing from Postman
+#### Testing with Postman
 Detailed instructions and endpoints for verifying functionality through API gateway calls are available [under this heading](#testing-from-postman).
 
 ## Running the Application Services without Docker for Local Development & Testing
