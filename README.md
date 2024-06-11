@@ -62,7 +62,7 @@ or anything else that can run in a Docker container.
 
 ### Monitoring and Tracing
 
-- **Micrometer Tracing and Brave**: For instrumenting your application and sending trace data to Zipkin.
+- **Micrometer Tracing and Brave**: For instrumenting the application and sending trace data to Zipkin.
 - **Zipkin**: For collecting and viewing trace data.
 - **Micrometer with Prometheus**: Micrometer collects metrics and exposes them via Spring Boot Actuator for Prometheus. 
 - **Prometheus**: For monitoring and alerting.
@@ -70,9 +70,9 @@ or anything else that can run in a Docker container.
 
 ### Front-end
 
-- **Next.js**: For server-side rendering, static site generation, and the recommended framework when using React.js.
+- **Next.js**: For server-side rendering, static site generation, and also the recommended framework when using React.js.
 - **React.js**: Popular JavaScript framework for building interactive user interfaces.
-- **Tailwind CSS**: Utility-first CSS framework to style the application.
+- **Tailwind CSS**: Utility-first CSS framework to style the front-end application.
 
 ## Application Architecture
 
