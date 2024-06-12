@@ -65,7 +65,7 @@ class BookServiceApplicationTests {
         return BookRequest.builder()
                 .name("Design Patterns: Elements of Reusable Object-Oriented Software")
                 .description("A classic book on software design patterns for object-oriented programming.")
-                .price(BigDecimal.valueOf(29))
+                .price(29.0)
                 .build();
     }
 }

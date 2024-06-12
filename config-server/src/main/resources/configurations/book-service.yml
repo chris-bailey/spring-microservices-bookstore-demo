@@ -7,6 +7,9 @@ spring:
       host: localhost
       port: 27017
       database: book-service
+  # GraphQL API URL
+  graphql:
+    path: /api/graphql
 
 server:
   port: 8081

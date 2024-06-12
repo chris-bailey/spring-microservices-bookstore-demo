@@ -1,0 +1,21 @@
+type Query {
+    getAllBooks: [BookResponse]
+}
+
+type Mutation {
+    createBook(bookRequest: BookRequest): BookResponse
+    deleteBook(id: ID!): Boolean
+}
+
+type BookResponse {
+    id: ID!
+    name: String!
+    description: String
+    price: Float
+}
+
+input BookRequest {
+    name: String!
+    description: String
+    price: Float
+}

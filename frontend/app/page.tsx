@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { ApolloProvider, useQuery, useMutation, gql } from '@apollo/client';
+import client from '../apollo-client'
 
 interface Book {
   id: string;
@@ -25,13 +27,44 @@ interface OrderBook {
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
+const GET_BOOKS = gql`
+  query GetBooks {
+    getAllBooks {
+      id
+      name
+      description
+      price
+    }
+  }
+`;
+
+const ADD_BOOK = gql`
+  mutation CreateBook($bookRequest: BookRequest!) {
+    createBook(bookRequest: $bookRequest) {
+      id
+      name
+      description
+      price
+    }
+  }
+`;
+
+const DELETE_BOOK = gql`
+  mutation DeleteBook($id: ID!) {
+    deleteBook(id: $id)
+  }
+`;
+
 const availableBooks: OrderBook[] = [
   { skuCode: 'design_patterns_gof', name: 'Design Patterns', price: 29, inStock: true },
   { skuCode: 'mythical_man_month', name: 'Mythical Man Month', price: 39, inStock: false },
 ];
 
-export default function Home() {
-  const [books, setBooks] = useState<Book[]>([]);
+const Home = () => {
+  const { loading: booksLoading, data: booksData, refetch: refetchBooks } = useQuery(GET_BOOKS);
+  const [addBook] = useMutation(ADD_BOOK);
+  const [deleteBook] = useMutation(DELETE_BOOK);
+
   const [newBook, setNewBook] = useState<Book>({
     id: '',
     name: '',
@@ -51,7 +84,6 @@ export default function Home() {
   const orderSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetchBooks();
     fetchAuthors();
   }, []);
 
@@ -68,16 +100,7 @@ export default function Home() {
     setValidationError(''); // Clear validation error on input change
   };
 
-  const fetchBooks = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/book`);
-      setBooks(response.data);
-    } catch (error) {
-      console.error('Error fetching books:', error);
-    }
-  };
-
-  const addBook = async () => {
+  const handleAddBook = async () => {
     const { name, description, price } = newBook;
     if (!name || !description || price <= 0) {
       setValidationError('All fields are required and price must be greater than zero.');
@@ -85,10 +108,8 @@ export default function Home() {
     }
 
     try {
-      await axios.post(`${API_BASE_URL}/book`, newBook, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      await fetchBooks();
+      await addBook({ variables: { bookRequest: { name, description, price } } });
+      await refetchBooks();
       setNewBook({ id: '', name: '', description: '', price: 0 });
       setValidationError(''); // Clear validation error on successful addition
     } catch (error) {
@@ -96,12 +117,10 @@ export default function Home() {
     }
   };
 
-  const deleteBook = async (id: string) => {
+  const handleDeleteBook = async (id: string) => {
     try {
-      await axios.delete(`${API_BASE_URL}/book/${id}`, {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      await fetchBooks();
+      await deleteBook({ variables: { id } });
+      await refetchBooks();
     } catch (error) {
       console.error('Error deleting book:', error);
     }
@@ -174,16 +193,20 @@ export default function Home() {
         {/* Books Section */}
         <section className="mb-12 p-6 bg-white shadow-lg rounded-md">
           <h2 className="text-2xl font-semibold mb-5 text-gray-700">List of Books</h2>
-          <ul className="list-disc pl-5 space-y-4">
-            {books.map((book) => (
-                <li key={book.id} className="flex justify-between items-center">
-                  <div>
-                    <span className="font-medium text-gray-800">{book.name}</span> - {book.description} - <span className="text-green-600">${book.price}</span>
-                  </div>
-                  <button onClick={() => deleteBook(book.id)} className="text-red-500 hover:underline ml-4">Delete</button>
-                </li>
-            ))}
-          </ul>
+          {booksLoading ? (
+              <p>Loading...</p>
+          ) : (
+              <ul className="list-disc pl-5 space-y-4">
+                {booksData.getAllBooks.map((book: Book) => (
+                    <li key={book.id} className="flex justify-between items-center">
+                      <div>
+                        <span className="font-medium text-gray-800">{book.name}</span> - {book.description} - <span className="text-green-600">${book.price}</span>
+                      </div>
+                      <button onClick={() => handleDeleteBook(book.id)} className="text-red-500 hover:underline ml-4">Delete</button>
+                    </li>
+                ))}
+              </ul>
+          )}
         </section>
 
         <section className="mb-12 p-6 bg-white shadow-lg rounded-md">
@@ -214,7 +237,7 @@ export default function Home() {
                 value={newBook.price}
                 onChange={handleInputChange}
             />
-            <button className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600" onClick={addBook}>Add Book</button>
+            <button className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600" onClick={handleAddBook}>Add Book</button>
             {validationError && <p className="text-red-500 mt-2">{validationError}</p>}
           </div>
         </section>
@@ -320,4 +343,14 @@ export default function Home() {
         </section>
       </div>
   );
+}
+
+
+// Wrap your Home component in ApolloProvider to provide Apollo Client instance
+export default function App() {
+    return (
+        <ApolloProvider client={client}>
+            <Home />
+        </ApolloProvider>
+    );
 }

@@ -14,5 +14,5 @@ import java.math.BigDecimal;
 public class BookRequest {
     private String name;
     private String description;
-    private BigDecimal price;
+    private Double price;
 }

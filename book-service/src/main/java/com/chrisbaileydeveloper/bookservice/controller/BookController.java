@@ -4,34 +4,35 @@ import com.chrisbaileydeveloper.bookservice.dto.BookRequest;
 import com.chrisbaileydeveloper.bookservice.dto.BookResponse;
 import com.chrisbaileydeveloper.bookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/book")
+@Controller
 @RequiredArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createBook(@RequestBody BookRequest bookRequest) {
+    @MutationMapping
+    public BookResponse createBook(@Argument BookRequest bookRequest) {
         bookService.createBook(bookRequest);
+        return bookService.getAllBooks().stream()
+                .filter(book -> book.getName().equals(bookRequest.getName()))
+                .findFirst()
+                .orElse(null);
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
+    @QueryMapping
     public List<BookResponse> getAllBooks() {
         return bookService.getAllBooks();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBook(@PathVariable String id) {
-        boolean isDeleted = bookService.deleteBook(id);
-        return isDeleted ? ResponseEntity.ok().build() : ResponseEntity.noContent().build();
+    @MutationMapping
+    public boolean deleteBook(@Argument String id) {
+        return bookService.deleteBook(id);
     }
 }
