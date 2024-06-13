@@ -466,11 +466,17 @@ You can connect to the PostgreSQL databases using the following connection prope
     - **Username:** `admin`
     - **Password:** `password`
 
-
 - **Postgres-Stock-Check Database:**
     - **Host:** `localhost`
     - **Port:** `5432`
     - **Database Name:** `stock-check-service`
+    - **Username:** `admin`
+    - **Password:** `password`
+
+- **Postgres-Author Database:**
+    - **Host:** `localhost`
+    - **Port:** `5433`
+    - **Database Name:** `author-service`
     - **Username:** `admin`
     - **Password:** `password`
 
