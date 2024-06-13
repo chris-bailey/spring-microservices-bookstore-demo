@@ -10,33 +10,13 @@
 			"name": "API Gateway",
 			"item": [
 				{
-					"name": "View Books",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/api/book",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"book"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save a Book",
+					"name": "Get All Books (GraphQL)",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"The Mythical Man-Month: Essays on Software Engineering\",\r\n    \"description\": \"A classic book on software project management and the pitfalls of adding manpower to late projects.\",\r\n    \"price\": 39\r\n}",
+							"raw": "{\r\n    \"query\": \"{ getAllBooks { id name description price } }\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +24,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/book",
+							"raw": "http://localhost:8080/api/graphql",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -52,20 +32,20 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"book"
+								"graphql"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete a Book",
+					"name": "Save a Book (GraphQL)",
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n  \"query\": \"mutation($book: BookRequest!) { createBook(bookRequest: $book) { id name description price } }\",\r\n  \"variables\": {\r\n    \"book\": {\r\n      \"name\": \"Effective Java\",\r\n      \"description\": \"The definitive guide to Java programming language best practices.\",\r\n      \"price\": 19.99\r\n    }\r\n  }\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -73,7 +53,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/book/665ce3253ec01673085663c9",
+							"raw": "http://localhost:8080/api/graphql",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -81,8 +61,36 @@
 							"port": "8080",
 							"path": [
 								"api",
-								"book",
-								"665ce3253ec01673085663c9"
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Book (GraphQL)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": \"mutation($id: ID!) { deleteBook(id: $id) }\",\r\n  \"variables\": {\r\n    \"id\": \"6668ed3473d87e10b647634a\"\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"graphql"
 							]
 						}
 					},
@@ -232,33 +240,13 @@
 			"name": "Local",
 			"item": [
 				{
-					"name": "Get All Books",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8081/api/book",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8081",
-							"path": [
-								"api",
-								"book"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Save a Book",
+					"name": "Get All Books (GraphQL)",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"The Mythical Man-Month: Essays on Software Engineering\",\r\n    \"description\": \"A classic book on software project management and the pitfalls of adding manpower to late projects.\",\r\n    \"price\": 29\r\n}",
+							"raw": "{\r\n    \"query\": \"{ getAllBooks { id name description price } }\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -266,7 +254,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/book",
+							"raw": "http://localhost:8081/api/graphql",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -274,20 +262,20 @@
 							"port": "8081",
 							"path": [
 								"api",
-								"book"
+								"graphql"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete a Book",
+					"name": "Save a Book (GraphQL)",
 					"request": {
-						"method": "DELETE",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n  \"query\": \"mutation($book: BookRequest!) { createBook(bookRequest: $book) { id name description price } }\",\r\n  \"variables\": {\r\n    \"book\": {\r\n      \"name\": \"Effective Java\",\r\n      \"description\": \"The definitive guide to Java programming language best practices.\",\r\n      \"price\": 19.99\r\n    }\r\n  }\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -295,7 +283,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/book/665cb65eb28d8f5f7d191548",
+							"raw": "http://localhost:8081/api/graphql",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -303,8 +291,36 @@
 							"port": "8081",
 							"path": [
 								"api",
-								"book",
-								"665cb65eb28d8f5f7d191548"
+								"graphql"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Book (GraphQL)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"query\": \"mutation($id: ID!) { deleteBook(id: $id) }\",\r\n  \"variables\": {\r\n    \"id\": \"6668e52957755d72a45c72fd\"\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/graphql",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"graphql"
 							]
 						}
 					},

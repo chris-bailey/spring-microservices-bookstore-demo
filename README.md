@@ -51,6 +51,10 @@ This project demonstrates a microservices architecture using the following techn
 
 - **Google JIB**: For building optimized Docker images for Java applications.
 
+### API Communication
+- **REST**: For traditional RESTful web service communication between microservices.
+- **GraphQL**: For flexible and efficient data querying and manipulation.
+
 ### Code Quality and Efficiency
 
 - **Lombok**: For reducing boilerplate code.
@@ -272,30 +276,57 @@ You can import the Postman configuration that is at the following location:
 If you prefer to enter the configuration manually, then continue to the next subheadings.
 
 ### API Gateway Endpoints
+
 #### View all Books
 
-- **Endpoint URL:** `http://localhost:8080/api/book`
-- **Method:** `GET`
-
-#### Save a Book
-
-- **Endpoint URL:** `http://localhost:8080/api/book`
+- **Endpoint URL:** `http://localhost:8080/api/graphql`
 - **Method:** `POST`
 - **Headers:** `Content-Type: application/json`
-- **Request Body:** The request body should be in **JSON format** and contain the following fields:
+- **Request Body:** The request body should be in **JSON format** and contain the following query:
 
 ```json
 {
-  "name": "The Mythical Man-Month: Essays on Software Engineering",
-  "description": "A classic book on software project management and the pitfalls of adding manpower to late projects.",
-  "price": 39
+  "query": "{ getAllBooks { id name description price } }"
+}
+```
+
+#### Save a Book
+
+- **Endpoint URL:** `http://localhost:8080/api/graphql`
+- **Method:** `POST`
+- **Headers:** `Content-Type: application/json`
+- **Request Body:** The request body should be in **JSON format** and contain the following mutation:
+
+```json
+{
+  "query": "mutation($book: BookRequest!) { createBook(bookRequest: $book) { id name description price } }",
+  "variables": {
+    "book": {
+      "name": "The Mythical Man-Month: Essays on Software Engineering",
+      "description": "A classic book on software project management and the pitfalls of adding manpower to late projects.",
+      "price": 39
+    }
+  }
 }
 ```
 
 #### Delete a Book
-- **Endpoint URL:** `http://localhost:8080/api/book/{id}`
-- **Method:** `DELETE`
 
+- **Endpoint URL:** `http://localhost:8080/api/graphql`
+- **Method:** `POST`
+- **Headers:** `Content-Type: application/json`
+- **Request Body:** The request body should be in **JSON format** and contain the following mutation:
+
+```json
+{
+  "query": "mutation($id: ID!) { deleteBook(id: $id) }",
+  "variables": {
+    "id": "book-id-to-delete"
+  }
+}
+```
+
+Replace `"book-id-to-delete"` with the actual ID of the book you want to delete.
 #### View All Authors
 - **Endpoint URL:** `http://localhost:8080/api/authors`
 - **Method:** `GET`
