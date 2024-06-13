@@ -1,7 +1,6 @@
 package com.chrisbaileydeveloper.bookservice;
 
 import com.chrisbaileydeveloper.bookservice.dto.BookRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.chrisbaileydeveloper.bookservice.repository.BookRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
-
-import java.math.BigDecimal;
+import org.testcontainers.utility.DockerImageName;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,11 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookServiceApplicationTests {
 
     @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.4.2"));
+
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
+
     @Autowired
     private BookRepository bookRepository;
 
@@ -41,8 +39,8 @@ class BookServiceApplicationTests {
     }
 
     @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry dymDynamicPropertyRegistry) {
-        dymDynamicPropertyRegistry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    static void setProperties(DynamicPropertyRegistry dynamicPropertyRegistry) {
+        dynamicPropertyRegistry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
     }
 
     @BeforeEach
@@ -53,11 +51,21 @@ class BookServiceApplicationTests {
     @Test
     void shouldCreateBook() throws Exception {
         BookRequest bookRequest = getBookRequest();
-        String bookRequestString = objectMapper.writeValueAsString(bookRequest);
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/book")
+
+        String mutation = String.format(
+                "mutation { createBook(bookRequest: { name: \"%s\", description: \"%s\", price: %s }) { id name description price } }",
+                bookRequest.getName(),
+                bookRequest.getDescription(),
+                bookRequest.getPrice()
+        );
+
+        String graphqlRequest = String.format("{\"query\": \"%s\"}", mutation.replace("\"", "\\\""));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/graphql")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(bookRequestString))
-                .andExpect(status().isCreated());
+                        .content(graphqlRequest))
+                .andExpect(status().isOk());
+
         Assertions.assertEquals(1, bookRepository.findAll().size());
     }
 

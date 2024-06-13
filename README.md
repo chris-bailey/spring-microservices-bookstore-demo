@@ -101,7 +101,8 @@ To deploy and run the microservices using Docker, follow these steps:
 
 ### Prerequisites
 Ensure Docker Desktop is installed and running. You **must** have Docker Desktop running, or you will encounter errors 
-when you try to build the Docker images. If Docker Desktop is not running, you may see an error like this:
+when you try to run the unit/integration tests and also when attempting to build the Docker images. 
+If Docker Desktop is not running, you may see an error like this:
 
 ```
 [ERROR] Failed to execute goal com.google.cloud.tools:jib-maven-plugin:3.2.1:dockerBuild (default) on project discovery-server: 'docker load' command failed with error: error during connect: this error may indicate that the docker daemon is not running...
