@@ -1,27 +1,21 @@
-package com.chrisbaileydeveloper.stockcheckservice.controller;
+package com.chrisbaileydeveloper.stockcheckservice.controller
 
-import com.chrisbaileydeveloper.stockcheckservice.dto.StockCheckResponse;
-import com.chrisbaileydeveloper.stockcheckservice.service.StockCheckService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import com.chrisbaileydeveloper.stockcheckservice.dto.StockCheckResponse
+import com.chrisbaileydeveloper.stockcheckservice.service.StockCheckService
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/stockcheck")
-@RequiredArgsConstructor
-@Slf4j
-public class StockCheckController {
+class StockCheckController(private val stockCheckService: StockCheckService) {
 
-    private final StockCheckService stockCheckService;
+    private val log = LoggerFactory.getLogger(StockCheckController::class.java)
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<StockCheckResponse> isInStock(@RequestParam List<String> skuCode) {
-        log.info("Stock check request received for skuCode: {}", skuCode);
-        return stockCheckService.isInStock(skuCode);
+    fun isInStock(@RequestParam skuCode: List<String>): List<StockCheckResponse> {
+        log.info("Stock check request received for skuCode: {}", skuCode)
+        return stockCheckService.isInStock(skuCode)
     }
 }
-

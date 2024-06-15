@@ -1,15 +1,6 @@
-package com.chrisbaileydeveloper.stockcheckservice.dto;
+package com.chrisbaileydeveloper.stockcheckservice.dto
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class StockCheckResponse {
-    private String skuCode;
-    private boolean isInStock;
-}
+data class StockCheckResponse(
+    val skuCode: String,
+    val isInStock: Boolean
+)

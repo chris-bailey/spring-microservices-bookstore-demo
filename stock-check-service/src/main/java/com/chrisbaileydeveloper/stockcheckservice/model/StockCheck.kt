@@ -1,23 +1,15 @@
-package com.chrisbaileydeveloper.stockcheckservice.model;
+package com.chrisbaileydeveloper.stockcheckservice.model
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import jakarta.persistence.*;
+import jakarta.persistence.*
 
 @Entity
 @Table
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class StockCheck {
-
+data class StockCheck(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String skuCode;
-    private Integer quantity;
+    val id: Long = 0L,
+    val skuCode: String = "",
+    val quantity: Int = 0
+) {
+    constructor() : this(0L, "", 0)
 }

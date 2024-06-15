@@ -1,12 +1,11 @@
-package com.chrisbaileydeveloper.stockcheckservice;
+package com.chrisbaileydeveloper.stockcheckservice
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 @SpringBootApplication
-public class StockCheckServiceApplication {
+open class StockCheckServiceApplication
 
-    public static void main(String[] args) {
-        SpringApplication.run(StockCheckServiceApplication.class, args);
-    }
+fun main(args: Array<String>) {
+    runApplication<StockCheckServiceApplication>(*args)
 }
