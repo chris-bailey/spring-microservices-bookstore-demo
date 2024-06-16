@@ -17,8 +17,11 @@ Before running the project, ensure you have the following installed:
 
 This project demonstrates a microservices architecture using the following technologies:
 
-### Spring Framework
+### Programming Languages
+- **Java**: Robust, versatile language for backend development.
+- **Kotlin**: Concise and interoperable with Java, enhancing readability.
 
+### Spring Framework
 - **Spring Boot 3**: For building the individual microservices.
 - **Spring Web**: For building RESTful web services.
 - **Spring Webflux (Reactor)**: For building non-blocking, reactive microservices.
@@ -56,7 +59,6 @@ This project demonstrates a microservices architecture using the following techn
 - **GraphQL**: For flexible and efficient data querying and manipulation.
 
 ### Code Quality and Efficiency
-
 - **Lombok**: For reducing boilerplate code.
 
 ### Testing
@@ -73,10 +75,10 @@ or anything else that can run in a Docker container.
 - **Grafana**: For visualizing metrics and logs.
 
 ### Front-end
-
 - **Next.js**: For server-side rendering, static site generation, and also the recommended framework when using React.js.
 - **React.js**: Popular JavaScript framework for building interactive user interfaces.
 - **Tailwind CSS**: Utility-first CSS framework to style the front-end application.
+- **TypeScript**: Typed superset of JavaScript that enhances code quality and maintainability.
 
 ## Application Architecture
 
