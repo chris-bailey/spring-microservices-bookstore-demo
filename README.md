@@ -6,6 +6,24 @@ This project is a demo application designed to illustrate the patterns and pract
 microservices with Spring. It features simple flows to clearly demonstrate the integration of various technologies
 within a microservices architecture to build scalable and maintainable systems.
 
+## Application Architecture
+
+The following diagram illustrates the architecture of the Spring Microservices Bookstore application:
+
+![Spring Microservices Bookstore Architecture](assets/spring-boot-microservices-diagram.jpg)
+
+This architecture includes the following components:
+
+- **API Gateway**: Acts as the entry point to the microservices architecture, routing requests to the appropriate services.
+- **Book Service**: Manages book data and interacts with a MongoDB database.
+- **Author Service**: Manages author profiles and interactions using a non-blocking, reactive approach with Spring Webflux.
+- **Order Service**: Handles purchase transactions and interacts with a PostgreSQL database.
+- **StockCheck Service**: Manages stock checking and interacts with a PostgreSQL database.
+- **Message Service**: Sends messages through interactions with Kafka.
+- **Eureka Discovery Server**: Registers all microservices for easy discovery and interaction.
+- **Resilience4j**: Provides fault tolerance for the services.
+- **Prometheus and Grafana**: Used for monitoring and visualizing metrics.
+
 ## Prerequisites
 Before running the project, ensure you have the following installed:
 
@@ -63,14 +81,14 @@ This project demonstrates a microservices architecture using the following techn
 
 ### Testing
 - **JUnit and Mockito**: For unit and integration testing.
-- **Testcontainers**: For providing lightweight, disposable instances of common databases, Selenium web browsers, 
-or anything else that can run in a Docker container.
+- **Testcontainers**: For providing lightweight, disposable instances of common databases, Selenium web browsers,
+  or anything else that can run in a Docker container.
 
 ### Monitoring and Tracing
 
 - **Micrometer Tracing and Brave**: For instrumenting the application and sending trace data to Zipkin.
 - **Zipkin**: For collecting and viewing trace data.
-- **Micrometer with Prometheus**: Micrometer collects metrics and exposes them via Spring Boot Actuator for Prometheus. 
+- **Micrometer with Prometheus**: Micrometer collects metrics and exposes them via Spring Boot Actuator for Prometheus.
 - **Prometheus**: For monitoring and alerting.
 - **Grafana**: For visualizing metrics and logs.
 
@@ -79,24 +97,6 @@ or anything else that can run in a Docker container.
 - **React.js**: Popular JavaScript framework for building interactive user interfaces.
 - **Tailwind CSS**: Utility-first CSS framework to style the front-end application.
 - **TypeScript**: Typed superset of JavaScript that enhances code quality and maintainability.
-
-## Application Architecture
-
-The following diagram illustrates the architecture of the Spring Microservices Bookstore application:
-
-![Spring Microservices Bookstore Architecture](assets/spring-boot-microservices-diagram.jpg)
-
-This architecture includes the following components:
-
-- **API Gateway**: Acts as the entry point to the microservices architecture, routing requests to the appropriate services.
-- **Book Service**: Manages book data and interacts with a MongoDB database.
-- **Author Service**: Manages author profiles and interactions using a non-blocking, reactive approach with Spring Webflux.
-- **Order Service**: Handles purchase transactions and interacts with a PostgreSQL database.
-- **StockCheck Service**: Manages stock checking and interacts with a PostgreSQL database.
-- **Message Service**: Sends messages through interactions with Kafka.
-- **Eureka Discovery Server**: Registers all microservices for easy discovery and interaction.
-- **Resilience4j**: Provides fault tolerance for the services.
-- **Prometheus and Grafana**: Used for monitoring and visualizing metrics.
 
 ## Running the Application with Docker
 To deploy and run the microservices using Docker, follow these steps:
