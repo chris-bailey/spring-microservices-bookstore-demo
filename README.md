@@ -15,10 +15,10 @@ The following diagram illustrates the architecture of the Spring Microservices B
 This architecture includes the following components:
 
 - **API Gateway**: Acts as the entry point to the microservices architecture, routing requests to the appropriate services.
-- **Book Service**: Manages book data and interacts with a MongoDB database.
+- **Book Service**: Manages book data and interacts with a MongoDB database, using GraphQL for querying.
 - **Author Service**: Manages author profiles and interactions using a non-blocking, reactive approach with Spring Webflux.
 - **Order Service**: Handles purchase transactions and interacts with a PostgreSQL database.
-- **StockCheck Service**: Manages stock checking and interacts with a PostgreSQL database.
+- **StockCheck Service**: Manages stock checking and interacts with a PostgreSQL database, written in Kotlin.
 - **Message Service**: Sends messages through interactions with Kafka.
 - **Eureka Discovery Server**: Registers all microservices for easy discovery and interaction.
 - **Resilience4j**: Provides fault tolerance for the services.
