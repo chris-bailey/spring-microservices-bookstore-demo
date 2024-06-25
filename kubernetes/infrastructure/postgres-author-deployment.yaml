@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-author
+  name: postgres-author
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-author
+  template:
+    metadata:
+      labels:
+        app: postgres-author
+    spec:
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /var/lib/postgresql/author-data/pgdata && chown -R 999:999 /var/lib/postgresql/author-data"]
+          volumeMounts:
+            - name: postgres-author-storage
+              mountPath: /var/lib/postgresql/author-data
+      containers:
+        - name: postgres-author
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5433
+          env:
+            - name: POSTGRES_DB
+              value: author_service
+            - name: POSTGRES_USER
+              value: admin
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: PGDATA
+              value: /var/lib/postgresql/author-data/pgdata
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/author-data
+              name: postgres-author-storage
+          args: ["-p", "5433"]
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+      volumes:
+        - name: postgres-author-storage
+          persistentVolumeClaim:
+            claimName: postgres-author-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-author
+  name: postgres-author
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "5433"
+      port: 5433
+      targetPort: 5433
+  selector:
+    app: postgres-author
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-author-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

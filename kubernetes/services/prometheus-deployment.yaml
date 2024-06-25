@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.37.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+          resources: {}
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "9090"
+      port: 9090
+      targetPort: 9090
+  selector:
+    app: prometheus
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval:     10s
+      evaluation_interval: 10s
+
+    scrape_configs:
+      - job_name: 'book_service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['book-service:8081']
+            labels:
+              application: 'Book Service Application'
+      - job_name: 'author_service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['author-service:8085']
+            labels:
+              application: 'Author Service Application'
+      - job_name: 'order_service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['order-service:8082']
+            labels:
+              application: 'Order Service Application'
+      - job_name: 'stock_check_service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['stock-check-service:8083']
+            labels:
+              application: 'Stock Check Service Application'
+      - job_name: 'message_service'
+        metrics_path: '/actuator/prometheus'
+        static_configs:
+          - targets: ['message-service:8084']
+            labels:
+              application: 'Message Service Application'

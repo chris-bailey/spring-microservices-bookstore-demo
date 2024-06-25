@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: message-service
+  name: message-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: message-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: message-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: microservices-bookstore/message-service:latest
+          imagePullPolicy: IfNotPresent # Pull local if not found elsewhere
+          name: message-service
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: message-service
+  name: message-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8084
+  selector:
+    app: message-service

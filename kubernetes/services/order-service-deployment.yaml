@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: order-service
+  name: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: microservices-bookstore/order-service:latest
+          imagePullPolicy: IfNotPresent # Pull local if not found elsewhere
+          name: order-service
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: order-service
+  name: order-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8082
+  selector:
+    app: order-service

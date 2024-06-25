@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: author-service
+  name: author-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: author-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: author-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: microservices-bookstore/author-service:latest
+          imagePullPolicy: IfNotPresent # Pull local if not found elsewhere
+          name: author-service
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: author-service
+  name: author-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8085
+  selector:
+    app: author-service

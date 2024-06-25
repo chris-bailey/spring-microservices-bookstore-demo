@@ -30,7 +30,7 @@ class StockCheckServiceApplicationTests {
     companion object {
         @Container
         val postgresDBContainer = PostgreSQLContainer<Nothing>("postgres:latest").apply {
-            withDatabaseName("stock-check-service")
+            withDatabaseName("stock_check_service")
             withUsername("admin")
             withPassword("password")
             withInitScript("schema.sql")

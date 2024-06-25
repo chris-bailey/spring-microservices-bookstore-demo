@@ -1,9 +1,6 @@
-server:
-  port: 8080
-
 spring:
   datasource:
-    url: jdbc:postgresql://postgres-stock-check:5432/stock-check-service
+    url: jdbc:postgresql://postgres-stock-check:5432/stock_check_service
     driver-class-name: org.postgresql.Driver
     username: admin
     password: password
@@ -16,4 +13,6 @@ management:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://eureka:password@discovery-server:8761/eureka
+      defaultZone: http://discovery-server:8761/eureka
+  instance:
+    preferIpAddress: true

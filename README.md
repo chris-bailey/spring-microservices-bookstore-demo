@@ -471,7 +471,7 @@ You can connect to the PostgreSQL databases using the following connection prope
 - **Postgres-Stock-Check Database:**
     - **Host:** `localhost`
     - **Port:** `5432`
-    - **Database Name:** `stock-check-service`
+    - **Database Name:** `stock_check_service`
     - **Username:** `admin`
     - **Password:** `password`
 

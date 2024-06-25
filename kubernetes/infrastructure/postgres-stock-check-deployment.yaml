@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-stock-check
+  name: postgres-stock-check
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-stock-check
+  template:
+    metadata:
+      labels:
+        app: postgres-stock-check
+    spec:
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /var/lib/postgresql/stock-check-data/pgdata && chown -R 999:999 /var/lib/postgresql/stock-check-data"]
+          volumeMounts:
+            - name: postgres-stock-check-storage
+              mountPath: /var/lib/postgresql/stock-check-data
+      containers:
+        - name: postgres-stock-check
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: stock_check_service
+            - name: POSTGRES_USER
+              value: admin
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: PGDATA
+              value: /var/lib/postgresql/stock-check-data/pgdata
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/stock-check-data
+              name: postgres-stock-check-storage
+          args: ["-p", "5432"]
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+      volumes:
+        - name: postgres-stock-check-storage
+          persistentVolumeClaim:
+            claimName: postgres-stock-check-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-stock-check
+  name: postgres-stock-check
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "5432"
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres-stock-check
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-stock-check-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 spring:
   r2dbc:
     url: r2dbc:postgresql://postgres-author:5433/author_service
@@ -16,6 +13,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://discovery-server:8761/eureka
+  instance:
+    preferIpAddress: true
 
 logging:
   level:

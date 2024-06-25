@@ -1,1 +1,1 @@
-CREATE DATABASE IF NOT EXISTS 'stock-check-service';
+CREATE DATABASE IF NOT EXISTS 'stock_check_service';

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: stock-check-service
+  name: stock-check-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stock-check-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: stock-check-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: microservices-bookstore/stock-check-service:latest
+          imagePullPolicy: IfNotPresent # Pull local if not found elsewhere
+          name: stock-check-service
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: stock-check-service
+  name: stock-check-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8083
+  selector:
+    app: stock-check-service

@@ -37,7 +37,7 @@ services:
     container_name: postgres-stock-check
     image: postgres
     environment:
-      POSTGRES_DB: stock-check-service
+      POSTGRES_DB: stock_check_service
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres

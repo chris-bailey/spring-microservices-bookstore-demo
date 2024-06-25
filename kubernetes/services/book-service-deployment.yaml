@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: book-service
+  name: book-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: book-service
+    spec:
+      containers:
+        - env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+          image: microservices-bookstore/book-service:latest
+          imagePullPolicy: IfNotPresent # Pull local if not found elsewhere
+          name: book-service
+          resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: book-service
+  name: book-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 8081
+  selector:
+    app: book-service

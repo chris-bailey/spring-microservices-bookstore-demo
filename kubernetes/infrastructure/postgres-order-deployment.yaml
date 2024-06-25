@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres-order
+  name: postgres-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-order
+  template:
+    metadata:
+      labels:
+        app: postgres-order
+    spec:
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /var/lib/postgresql/order-data/pgdata && chown -R 999:999 /var/lib/postgresql/order-data"]
+          volumeMounts:
+            - name: postgres-order-storage
+              mountPath: /var/lib/postgresql/order-data
+      containers:
+        - name: postgres-order
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5431
+          env:
+            - name: POSTGRES_DB
+              value: order_service
+            - name: POSTGRES_USER
+              value: admin
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: PGDATA
+              value: /var/lib/postgresql/order-data/pgdata
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/order-data
+              name: postgres-order-storage
+          args: ["-p", "5431"]
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+      volumes:
+        - name: postgres-order-storage
+          persistentVolumeClaim:
+            claimName: postgres-order-pvc
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres-order
+  name: postgres-order
+spec:
+  type: LoadBalancer
+  ports:
+    - name: "5431"
+      port: 5431
+      targetPort: 5431
+  selector:
+    app: postgres-order
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-order-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
