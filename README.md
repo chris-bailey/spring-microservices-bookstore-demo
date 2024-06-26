@@ -63,13 +63,14 @@ This project demonstrates a microservices architecture using the following techn
 - **ZooKeeper**: For managing Kafka brokers.
 
 ### Docker Ecosystem
-
 - **Docker**: For containerizing the microservices.
 - **Docker Compose**: For orchestrating multi-container Docker applications.
 - **Docker Desktop**: For running Docker on local machines.
 
-### Build and Deployment
+### Kubernetes
+- **Kubernetes**: Enterprise-level container orchestration, automating deployment, scaling, and management of containerized applications.
 
+### Build and Deployment
 - **Google JIB**: For building optimized Docker images for Java applications.
 
 ### API Communication
@@ -85,7 +86,6 @@ This project demonstrates a microservices architecture using the following techn
   or anything else that can run in a Docker container.
 
 ### Monitoring and Tracing
-
 - **Micrometer Tracing and Brave**: For instrumenting the application and sending trace data to Zipkin.
 - **Zipkin**: For collecting and viewing trace data.
 - **Micrometer with Prometheus**: Micrometer collects metrics and exposes them via Spring Boot Actuator for Prometheus.
@@ -160,6 +160,54 @@ Deploy the application components in phases to ensure all services are initializ
    Finally, deploy the application services:
    ```sh
    docker-compose --profile services up -d
+   ```
+
+### Verification
+Once all services are deployed, verify the application's functionality via the front-end application or API gateway calls.
+
+#### Front-end Application
+Navigate to [http://localhost:3000](http://localhost:3000) to access the front-end application. The page provides the following functionality:
+- **List of Books:** View all available books.
+- **Add a New Book:** Add a new book by entering the name, description, and price.
+- **Delete a Book:** Remove a book from the list.
+- **List of Authors:** View all available authors.
+- **Add a New Author:** Add a new author by entering the name and birthdate.
+- **Delete an Author:** Remove an author from the list.
+- **Place an Order:** Select a book to place an order.
+- **Microservices Links:** Access various microservices through provided links.
+
+#### Testing with Postman
+Detailed instructions and endpoints for verifying functionality through API gateway calls are available [under this heading](#testing-from-postman).
+
+## Deploying the Application with Kubernetes
+This project is also set up to run on Kubernetes.
+
+### Prerequisites
+- **Docker Desktop**: Ensure Docker Desktop is installed and running.
+    - **Enable Kubernetes**: Open Docker Desktop, click on the Settings gear icon, then select Kubernetes from the left menu, and check "Enable Kubernetes".
+- Alternatively, any local Kubernetes setup should work.
+
+### Deploying the Application
+1. **Build Docker Images**: Make sure you have built the Docker images for all the services as well as the front-end application.
+
+2. **Deploy Infrastructure**:
+   From the top-level directory, run the following command:
+   ```sh
+   kubectl apply -f kubernetes/infrastructure
+   ```
+   Wait until all infrastructure components are fully operational before proceeding.
+
+3. **Deploy Discovery and Configuration Servers**:
+   From the top-level directory, run the following command:
+   ```sh
+   kubectl apply -f kubernetes/discovery-config
+   ```
+   Ensure these servers are running smoothly to facilitate service registration and configuration management.
+
+4. **Deploy Application Services**:
+   From the top-level directory, run the following command:
+   ```sh
+   kubectl apply -f kubernetes/services
    ```
 
 ### Verification
